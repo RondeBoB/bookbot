@@ -1,11 +1,34 @@
+import sys
+from stats import (count_words, total_count, count_characters)
+
 def main():
-    path = "books/frankenstein.txt"
-    text = read_book(path)
+    if len(sys.argv) < 2:
+        print("Usage: python main.py <path_to_book>")
+        sys.exit(1)
+    path = sys.argv[1]
+
+    text = read_book(path) 
     characters = list(text.lower())
     word_count = count_words(text)
     char_count = count_characters(characters)
     char_sorted = sort_characters(char_count)
+    print_report_simple(path, word_count, char_sorted)
 
+
+def print_report_simple(path, word_count, char_sorted):
+    print("============ BOOKBOT ============")
+    print(f"Analyzing book found at {path}...")
+    print("----------- Word Count ----------")
+    print(f"Found {word_count} total words")
+    print("--------- Character Count -------")
+    for item in char_sorted:
+        if not item["char"].isalpha():
+            continue
+        print(f"{item['char']}: {item['num']}")
+
+    print("============= END ===============")
+
+def print_report(path, word_count, char_sorted):
     print(f"--- Begin report of {path} ---")
     print(f"{word_count} words found in the document")
     print()
@@ -17,35 +40,10 @@ def main():
 
     print("--- End report ---")
 
-
 def read_book(path):
     with open(path) as f:
         file_contents = f.read()
         return(file_contents)
-
-def count_words(text):
-    words = len(text.split())
-    return(words)
-
-def total_count(characters):
-    count = 0
-
-    for c in characters:
-        if c.isalpha() == True:
-           count += 1
-    return(count)
-
-def count_characters(characters):
-    count_dict = {}
-    # print(characters)
-
-    for c in characters:
-        #if c.isalpha() == True:
-            if c in count_dict:
-                count_dict[c] += 1
-            else:
-                count_dict[c] = 1
-    return(count_dict)
 
 def sort_on(d):
     return d["num"]
